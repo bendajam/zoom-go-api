@@ -10,6 +10,19 @@ type ListMeetingsAPIResponse struct {
 	Meetings     []Meeting `json:"meetings"`
 }
 
+type Poll struct {
+	ID        string     `json:"id"`
+	Status    string     `json:"status"`
+	Title     string     `json:"title"`
+	Questions []Question `json:"questions"`
+}
+
+type Question struct {
+	Name    string   `json:"name"`
+	Type    string   `json:"type"`
+	Answers []string `json:"answers"`
+}
+
 type Meeting struct {
 	Uuid      string    `json:"uuid"`
 	Id        int       `json:"id"`
@@ -226,4 +239,40 @@ type ListMeetingRegistrantsResponse struct {
 
 type UpdateMeetingStatusRequest struct {
 	Action string `json:"action"`
+}
+
+type PastMeetingDetailsResponse struct {
+	UUID              string `json:"uuid"`
+	ID                int    `json:"id"`
+	HostID            int    `json:"host_id"`
+	Type              int    `json:"type"`
+	Topic             string `json:"topic"`
+	UserName          string `json:"user_name"`
+	UserEmail         string `json:"user_email"`
+	StartTime         string `json:"start_time"`
+	EndTime           string `json:"end_time"`
+	Duration          int    `json:"duration"`
+	TotalMinutes      int    `json:"total_minutes"`
+	ParticipantsCount int    `json:"participants_count"`
+}
+
+type PastMeetingParticipantsResponse struct {
+	PageCount     int    `json:"page_count"`
+	PageSize      int    `json:"page_size"`
+	TotalRecords  int    `json:"total_records"`
+	NextPageToken string `json:"next_page_token"`
+	Participants  []struct {
+		ID        string `json:"id"`
+		Name      string `json:"name"`
+		UserEmail string `json:"user_email"`
+	} `json:"participants"`
+}
+
+type ListMeetingPollsResponse struct {
+	TotalRecords int    `json:"total_records"`
+	Polls        []Poll `json:"polls"`
+}
+
+type GetMeetingPollResponse struct {
+	Poll []Poll `json:"poll"`
 }

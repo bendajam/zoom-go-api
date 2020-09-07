@@ -205,3 +205,25 @@ func (client Client) UpdateMeetingStatus(meetingID int, status string) (err erro
 	_, err = client.doRequest(endpoint, httpMethod, *bytes.NewBuffer(reqBody))
 	return
 }
+
+// GetPastMeetingDetails returns the details of a meeting.
+func (client Client) GetPastMeetingDetails(meetingID int) (apiResponse PastMeetingDetailsResponse, err error) {
+
+	endpoint := fmt.Sprintf("/past_meetings/%d", meetingID)
+	httpMethod := http.MethodGet
+
+	var b []byte
+	err = client.doRequestJSON(endpoint, httpMethod, *bytes.NewBuffer(b), &apiResponse)
+	return
+}
+
+// GetPastMeetingParticipants returns the all of the users that attended a meeting in the past.
+func (client Client) GetPastMeetingParticipants(meetingID int) (apiResponse PastMeetingParticipantsResponse, err error) {
+
+	endpoint := fmt.Sprintf("/past_meetings/%d/participants", meetingID)
+	httpMethod := http.MethodGet
+
+	var b []byte
+	err = client.doRequestJSON(endpoint, httpMethod, *bytes.NewBuffer(b), &apiResponse)
+	return
+}
