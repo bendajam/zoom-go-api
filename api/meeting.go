@@ -62,6 +62,27 @@ func (client Client) AddMeetingRegistrant(meetingID int,
 	return
 }
 
+func (client Client) UpdateMeetingRegistrantStatus(meetingID int, action string, registrants []Registrant) (err error) {
+	updateMeetingRegistrantStatusRequest := UpdateMeetingRegistrantStatusRequest{
+		Action:      action,
+		Registrants: registrants,
+	}
+
+	var reqBody []byte
+	reqBody, err = json.Marshal(updateMeetingRegistrantStatusRequest)
+	if err != nil {
+		return
+	}
+
+	endpoint := fmt.Sprintf("/meetings/%d/registrants/status", meetingID)
+	httpMethod := http.MethodPost
+
+	_, err = client.doRequest(endpoint, httpMethod, *bytes.NewBuffer(reqBody))
+
+	return
+
+}
+
 func (client Client) CreateMeeting(
 	userID,
 	topic,
@@ -157,6 +178,16 @@ func (client Client) GetMeeting(meetingID int) (getMeetingResponse GetMeetingRes
 	return
 }
 
+func (client Client) ListEndedMeetingInstances(meetingID int) (apiResponse ListEndedMeetingInstancesResponse, err error) {
+
+	endpoint := fmt.Sprintf("/past_meetings/%d/instances", meetingID)
+	httpMethod := http.MethodGet
+
+	var b []byte
+	err = client.doRequestJSON(endpoint, httpMethod, *bytes.NewBuffer(b), &apiResponse)
+	return
+}
+
 func (client Client) GetMeetingInvitation(meetingID int) (getMeetingInvitationResponse GetMeetingInvitationResponse, err error) {
 
 	endpoint := fmt.Sprintf("/meetings/%d/invitation", meetingID)
@@ -225,5 +256,75 @@ func (client Client) GetPastMeetingParticipants(meetingID int) (apiResponse Past
 
 	var b []byte
 	err = client.doRequestJSON(endpoint, httpMethod, *bytes.NewBuffer(b), &apiResponse)
+	return
+}
+
+func (client Client) ListMeetingPolls(meetingID int) (apiResponse ListMeetingPollsResponse, err error) {
+
+	endpoint := fmt.Sprintf("/meetings/%d/polls", meetingID)
+	httpMethod := http.MethodGet
+
+	var b []byte
+	err = client.doRequestJSON(endpoint, httpMethod, *bytes.NewBuffer(b), &apiResponse)
+	return
+}
+
+func (client Client) CreateMeetingPoll(meetingID int, title string, questions []Question) (err error) {
+
+	endpoint := fmt.Sprintf("/meetings/%d/polls", meetingID)
+	httpMethod := http.MethodPost
+
+	poll := CreateMeetingPollRequest{
+		Title:     title,
+		Questions: questions,
+	}
+
+	var reqBody []byte
+	reqBody, err = json.Marshal(poll)
+	if err != nil {
+		return
+	}
+
+	_, err = client.doRequest(endpoint, httpMethod, *bytes.NewBuffer(reqBody))
+	return
+}
+
+func (client Client) GetMeetingPoll(meetingID int, pollID string) (apiResponse GetMeetingPollResponse, err error) {
+
+	endpoint := fmt.Sprintf("/meetings/%d/polls/%s", meetingID, pollID)
+	httpMethod := http.MethodGet
+
+	var b []byte
+	err = client.doRequestJSON(endpoint, httpMethod, *bytes.NewBuffer(b), &apiResponse)
+	return
+}
+
+func (client Client) UpdateMeetingPoll(meetingID int, pollID, title string, questions []Question) (err error) {
+
+	endpoint := fmt.Sprintf("/meetings/%d/polls/%s", meetingID, pollID)
+	httpMethod := http.MethodPut
+
+	poll := UpdateMeetingPollRequest{
+		Title:     title,
+		Questions: questions,
+	}
+
+	var reqBody []byte
+	reqBody, err = json.Marshal(poll)
+	if err != nil {
+		return
+	}
+
+	_, err = client.doRequest(endpoint, httpMethod, *bytes.NewBuffer(reqBody))
+	return
+}
+
+func (client Client) DeleteMeetingPoll(meetingID int, pollID string) (err error) {
+
+	endpoint := fmt.Sprintf("/meetings/%d/polls/%s", meetingID, pollID)
+	httpMethod := http.MethodDelete
+
+	var reqBody []byte
+	_, err = client.doRequest(endpoint, httpMethod, *bytes.NewBuffer(reqBody))
 	return
 }

@@ -10,6 +10,11 @@ type ListMeetingsAPIResponse struct {
 	Meetings     []Meeting `json:"meetings"`
 }
 
+type Registrant struct {
+	ID    string `json:"id"`
+	Email string `json:"email"`
+}
+
 type Poll struct {
 	ID        string     `json:"id"`
 	Status    string     `json:"status"`
@@ -237,8 +242,20 @@ type ListMeetingRegistrantsResponse struct {
 	Registrants  []MeetingRegistrant `json:"registrants"`
 }
 
+type UpdateMeetingRegistrantStatusRequest struct {
+	Action      string       `json:"action"`
+	Registrants []Registrant `json:"registrant"`
+}
+
 type UpdateMeetingStatusRequest struct {
 	Action string `json:"action"`
+}
+
+type ListEndedMeetingInstancesResponse struct {
+	Meetings []struct {
+		UUID      string `json:"uuid"`
+		StartTime string `json:"start_time"`
+	}
 }
 
 type PastMeetingDetailsResponse struct {
@@ -275,4 +292,14 @@ type ListMeetingPollsResponse struct {
 
 type GetMeetingPollResponse struct {
 	Poll []Poll `json:"poll"`
+}
+
+type CreateMeetingPollRequest struct {
+	Title     string     `json:"title"`
+	Questions []Question `json:"question"`
+}
+
+type UpdateMeetingPollRequest struct {
+	Title     string     `json:"title"`
+	Questions []Question `json:"question"`
 }
